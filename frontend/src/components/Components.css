@@ -1,0 +1,29 @@
+#header {
+  padding: 8px;
+  background: #79ac78;
+  margin-bottom: 3vh;
+}
+
+#header-nav {
+  float: right;
+  margin-top: 1vh;
+}
+
+.botao-header {
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  background: #effbee;
+  cursor: pointer;
+  padding: 15px;
+  font-size: large;
+  margin-left: 15px;
+}
+
+.botao-header img {
+  max-width: 30px;
+}
+
+#logoequipe {
+  float: right;
+}
