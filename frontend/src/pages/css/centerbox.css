@@ -1,0 +1,19 @@
+.centerbox {
+    display: flex;
+    justify-content: center;
+    margin-top: 50vh;
+}
+
+.flexcollum {
+    display: flex;
+    flex-direction: column;
+}
+
+button img {
+    max-width: 30px;
+    max-height: 30px;
+}
+
+button, span {
+    margin: 15px;
+}
