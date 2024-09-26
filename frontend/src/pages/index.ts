@@ -1,11 +1,9 @@
-import Home from "./home/Home"
-import { Login } from "./Login"
-import { Private } from "./private/Private"
-import User from "./user/User"
+import Home from "./home"
+import Login from "./Login"
+import Private from "./private"
 
 export {
-    Login,
+    Home,
     Private,
-    User,
-    Home
+    Login
 }

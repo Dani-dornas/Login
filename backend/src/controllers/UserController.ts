@@ -1,86 +1,71 @@
-import AppDataSource from "../data-source";
 import { Request, Response } from "express";
-import { User } from "../entities/User";
+import User from "../models/User";
 
-class UserController {
-  public async create(req: Request, res: Response): Promise<Response> {
-    const { alias, mail, password } = req.body;
-    const user = await AppDataSource.manager
-      .save(User, { alias, mail, password })
-      .catch((e) => {
-        // testa se o alias é repetido
-        if (/(alias)[\s\S]+(already exists)/.test(e.detail)) {
-          return { error: "Codinome já existe", props: "alias" };
-        }
-        // testa se o e-mail é repetido
-        else if (/(mail)[\s\S]+(already exists)/.test(e.detail)) {
-          return { error: "E-mail já existe", props: "mail" };
-        }
-        // // testa se o e-mail é repetido
-        // else if (/(password)[\s\S]+(already exists)/.test(e.detail)) {
-        //   return { error: "Telefone já existe", props: "password" };
-        // }
-        return { error: e.message, props: "" };
+class UsersController {
+  public async create(req: Request, res: Response): Promise<void> {
+    const { mail, password, name, isLogged, cargo, proj_id } = req.body;
+
+    try {
+      const response = await User.create({
+        mail,
+        password,
+        name,
+        isLogged,
+        cargo,
+        proj_id,
       });
-    return res.json(user);
-  }
-
-  public async update(req: Request, res: Response): Promise<Response> {
-    const { id, alias, mail, password, isLogged } = req.body;
-    //obtém o usuário na tabela users
-    const user = await AppDataSource.manager.findOneBy(User, { id });
-    if (!user) {
-      //verifica se o usuário existe
-      return res.json({ error: "Usuário inexistente", props: "user" });
+      res.send(response);
+    } catch (e: any) {
+      if (e.code === 11000) {
+        res.send({ message: `O e-mail ${mail} já está em uso` });
+      } else if (e.errors?.mail) {
+        res.send({ message: e.errors.mail.message });
+      } else {
+        res.send({ message: e });
+      }
     }
-    user.alias = alias;
-    user.mail = mail;
-    user.password = password;
-    user.isLogged = isLogged;
-    const r = await AppDataSource.manager.save(User, user).catch((e) => {
-      // testa se o alias é repetido
-      if (/(alias)[\s\S]+(already exists)/.test(e.detail)) {
-        return { error: "Codinome já existe", props: "alias" };
-      }
-      // testa se o e-mail é repetido
-      else if (/(mail)[\s\S]+(already exists)/.test(e.detail)) {
-        return { error: "E-mail já existe", props: "mail" };
-      }
-      // // testa se telefone é repetido
-      // else if (/(password)[\s\S]+(already exists)/.test(e.detail)) {
-      //   return { error: "Telefone já existe", props: "password" };
-      // }
-      return { error: e.message, props: "" };
-    });
-    return res.json(r);
   }
 
-  public async list(_: Request, res: Response): Promise<Response> {
-    const users = await AppDataSource.manager.find(User, {
-      order: {
-        alias: "ASC",
-      },
-    });
-    return res.json(users);
+  public async list(_: Request, res: Response): Promise<void> {
+    res.send(await User.find());
   }
 
-  public async listById(req: Request, res: Response): Promise<Response> {
-    const { id } = req.params;
-
-    console.log("id", id);
-    const user = await AppDataSource.manager.findOne(User, {
-      where: { id: parseInt(id) },
-    });
-    return res.json(user);
-  }
-
-  public async delete(req: Request, res: Response): Promise<Response> {
+  public async delete(req: Request, res: Response): Promise<void> {
     const { id } = req.body;
-    // o método delete retorna o objeto {"raw": [],"affected": 1}
-    // a propriedade affected terá valor 0 se não tiver sido excluído o registro
-    const { affected } = await AppDataSource.manager.delete(User, { id });
-    return res.json({ affected });
+    const response = await User.findByIdAndDelete(id);
+    if (response) {
+      res.json(response);
+    } else {
+      res.json({ message: "Registro inexistente" });
+    }
+  }
+
+  public async update(req: Request, res: Response): Promise<void> {
+    const { id, mail, password, isLogged, cargo, projeto } = req.body;
+    try {
+      const response = await User.findByIdAndUpdate(
+        id,
+        { mail, password, isLogged, cargo, projeto },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+      if (response) {
+        res.json(response);
+      } else {
+        res.json({ message: "Registro inexistente" });
+      }
+    } catch (e: any) {
+      if (e.code === 11000) {
+        res.send({ message: `O e-mail ${mail} já está em uso` });
+      } else if (e.errors?.mail) {
+        res.send({ message: e.errors.mail.message });
+      } else {
+        res.send({ message: e });
+      }
+    }
   }
 }
 
-export default new UserController();
+export default new UsersController();

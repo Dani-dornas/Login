@@ -1,17 +1,11 @@
-import { Router, Request, Response } from "express";
+import { Router } from "express";
 import controller from "../controllers/UserController";
 
-const routes = Router();
+const router = Router();
 
-routes.post("/", controller.create);
-routes.get("/", controller.list);
-routes.get("/:id", controller.listById);
-routes.delete("/", controller.delete);
-routes.put("/", controller.update);
+router.get("/", controller.list);
+router.post("/", controller.create);
+router.delete("/", controller.delete);
+router.put("/", controller.update);
 
-//aceita qualquer método HTTP ou URL
-routes.use((_: Request, res: Response) =>
-  res.json({ error: "Requisição desconhecida" })
-);
-
-export default routes;
+export default router;
