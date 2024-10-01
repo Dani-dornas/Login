@@ -1,7 +1,18 @@
 import { Link, Route, Routes } from "react-router-dom";
-import { Home, Private } from "./pages";
+import { Home, Private, User } from "./pages";
 import "./app.css";
 import RequireAuth from "./contexts/Auth/RequireAuth";
+import { useContext } from "react";
+import { AuthContext } from "./contexts/Auth/AuthContext";
+
+
+  const handleLogout = async () => {
+    await auth.signout();
+    window.location.reload();
+  };
+
+
+const auth = useContext(AuthContext);
 
 function App() {
   return (
@@ -9,7 +20,26 @@ function App() {
       <header>
         <nav>
           <Link to="/">Home</Link>
-          <Link to="/private">Private</Link>
+
+          {auth.user ? (
+                <div>
+                  <button>
+                    <Link to={`/user/${auth.user?.id}`}>
+                      <img src="" alt="Pagina de usuário" />
+                    </Link>
+                  </button>
+
+                  <button onClick={handleLogout}>
+                    <img src="" alt="Logout Button" />
+                  </button>
+                </div>
+              ) : (
+                <button>
+                  <Link to="/Private">
+                    <img src="" alt="Pagina de usuário" />
+                  </Link>
+                </button>
+              )}
         </nav>
       </header>
 
@@ -22,6 +52,14 @@ function App() {
           element={
             <RequireAuth>
               <Private />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/user/:id"
+          element={
+            <RequireAuth>
+              <User />
             </RequireAuth>
           }
         />

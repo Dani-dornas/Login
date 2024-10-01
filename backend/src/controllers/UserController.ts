@@ -3,16 +3,14 @@ import User from "../models/User";
 
 class UsersController {
   public async create(req: Request, res: Response): Promise<void> {
-    const { mail, password, name, isLogged, cargo, proj_id } = req.body;
+    const { mail, password, name, isLogged } = req.body;
 
     try {
       const response = await User.create({
         mail,
         password,
         name,
-        isLogged,
-        cargo,
-        proj_id,
+        isLogged
       });
       res.send(response);
     } catch (e: any) {
@@ -41,11 +39,11 @@ class UsersController {
   }
 
   public async update(req: Request, res: Response): Promise<void> {
-    const { id, mail, password, isLogged, cargo, projeto } = req.body;
+    const { id, name, mail, password, isLogged } = req.body;
     try {
       const response = await User.findByIdAndUpdate(
         id,
-        { mail, password, isLogged, cargo, projeto },
+        { mail, name, password, isLogged },
         {
           new: true,
           runValidators: true,

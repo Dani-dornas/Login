@@ -1,19 +1,36 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
 import { User } from "../../types/User";
-import { useApi } from "../../hooks/use.Api";
+import { useApi } from "../../hooks/useApi";
 
 export default function AuthProvider({ children }: { children: JSX.Element }) {
   // salva o usuário logado. Quando não há usuário, salva nulo (igual quando começa)
   const [user, setUser] = useState<User | null>(null);
   const api = useApi();
   
+  useEffect(() => {
+    const validateUser = async () => {
+      const email = localStorage.getItem("authEmail");
+      if (email) {
+        const data = await api.validateUser(email);
+        if (data && data.isLogged) {
+          setUser(data);
+        }
+      }
+    };
+
+    validateUser();
+  }, []);
+
   //faz reaquisição para o BACKEND para ver se a autenticação funciona ou não
   const signin = async (email: string, password: string) => {
     const data = await api.signin(email, password);
-    //se temos um usuário e um token, salva o usuário
-    if (data.user && data.token) {
-      setUser(data.user);
+    console.log(data)
+
+    //Se há um usuário e ele está logado, então salva o usuário
+    if (data && data.isLogged) {
+      setUser(data);
+      setLocalStorage(data);
       return true;
     }
     return false;
@@ -21,8 +38,15 @@ export default function AuthProvider({ children }: { children: JSX.Element }) {
 
   //zera o usuário
   const signout = async () => {
-    await api.logout();
+    let email = user?.email ? user?.email : "";
+    await api.logout(email);
     setUser(null);
+    localStorage.clear();
+    window.location.reload();
+  };
+
+  const setLocalStorage = (user: User) => {
+    localStorage.setItem("authEmail", user.email);
   };
 
   return (
