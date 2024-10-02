@@ -3,11 +3,11 @@ import User from "../models/User";
 
 class UsersController {
   public async create(req: Request, res: Response): Promise<void> {
-    const { mail, password, name, isLogged } = req.body;
+    const { email, password, name, isLogged } = req.body;
 
     try {
       const response = await User.create({
-        mail,
+        email,
         password,
         name,
         isLogged
@@ -15,7 +15,7 @@ class UsersController {
       res.send(response);
     } catch (e: any) {
       if (e.code === 11000) {
-        res.send({ message: `O e-mail ${mail} já está em uso` });
+        res.send({ message: `O e-mail ${email} já está em uso` });
       } else if (e.errors?.mail) {
         res.send({ message: e.errors.mail.message });
       } else {
@@ -39,11 +39,11 @@ class UsersController {
   }
 
   public async update(req: Request, res: Response): Promise<void> {
-    const { id, name, mail, password, isLogged } = req.body;
+    const { id, name, email, password, isLogged } = req.body;
     try {
       const response = await User.findByIdAndUpdate(
         id,
-        { mail, name, password, isLogged },
+        { email, name, password, isLogged },
         {
           new: true,
           runValidators: true,
@@ -56,8 +56,8 @@ class UsersController {
       }
     } catch (e: any) {
       if (e.code === 11000) {
-        res.send({ message: `O e-mail ${mail} já está em uso` });
-      } else if (e.errors?.mail) {
+        res.send({ message: `O e-mail ${email} já está em uso` });
+      } else if (e.errors?.email) {
         res.send({ message: e.errors.mail.message });
       } else {
         res.send({ message: e });

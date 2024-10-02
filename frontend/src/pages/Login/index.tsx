@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/Auth/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Login() {
   const auth = useContext(AuthContext);
@@ -37,6 +37,7 @@ export default function Login() {
         placeholder="Senha"
       />
       <button onClick={handleLogin}>ENTRAR</button>
+      <Link to="/register">REGISTRE-SE</Link>
     </div>
   );
 }

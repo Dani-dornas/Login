@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 interface IUser extends Document {
-    mail: string,
+    email: string,
     name: string,
     isLogged: boolean,
     password: string;
@@ -10,7 +10,7 @@ interface IUser extends Document {
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const UsersSchema: Schema<IUser> = new Schema({
-    mail: {
+    email: {
         type: String,
         trim: true,
         lowercase: true,

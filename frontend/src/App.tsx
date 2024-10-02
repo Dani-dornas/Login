@@ -1,20 +1,18 @@
 import { Link, Route, Routes } from "react-router-dom";
-import { Home, Private, User } from "./pages";
+import { Home, Private, Register, User } from "./pages";
 import "./app.css";
 import RequireAuth from "./contexts/Auth/RequireAuth";
 import { useContext } from "react";
 import { AuthContext } from "./contexts/Auth/AuthContext";
 
+function App() {
+  const auth = useContext(AuthContext);
 
   const handleLogout = async () => {
     await auth.signout();
     window.location.reload();
   };
 
-
-const auth = useContext(AuthContext);
-
-function App() {
   return (
     <div className="app">
       <header>
@@ -22,24 +20,24 @@ function App() {
           <Link to="/">Home</Link>
 
           {auth.user ? (
-                <div>
-                  <button>
-                    <Link to={`/user/${auth.user?.id}`}>
-                      <img src="" alt="Pagina de usuário" />
-                    </Link>
-                  </button>
+            <div>
+              <button>
+                <Link to={`/user/${auth.user?.id}`}>
+                  <img src="" alt="Pagina de usuário" />
+                </Link>
+              </button>
 
-                  <button onClick={handleLogout}>
-                    <img src="" alt="Logout Button" />
-                  </button>
-                </div>
-              ) : (
-                <button>
-                  <Link to="/Private">
-                    <img src="" alt="Pagina de usuário" />
-                  </Link>
-                </button>
-              )}
+              <button onClick={handleLogout}>
+                <img src="" alt="Logout Button" />
+              </button>
+            </div>
+          ) : (
+            <button>
+              <Link to="/Private">
+                <img src="" alt="Pagina de usuário" />
+              </Link>
+            </button>
+          )}
         </nav>
       </header>
 
@@ -63,6 +61,7 @@ function App() {
             </RequireAuth>
           }
         />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </div>
   );

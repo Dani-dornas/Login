@@ -9,18 +9,19 @@ class UsersService {
 
   async post(props: {
     name: string;
-    mail: string;
+    email: string;
     password: string;
     isLogged: boolean;
   }): Promise<any> {
     const { data } = await api.post("/user", props);
+    console.log(data)
     return data;
   }
 
   async put(props: {
     id: string;
     name: string;
-    mail: string;
+    email: string;
     password: string;
     isLogged: boolean;
   }): Promise<any> {

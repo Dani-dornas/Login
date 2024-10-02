@@ -17,6 +17,13 @@ export const useApi = ()=> ({
     },
     */
 
+    registerUser: async (name: string, email: string, password: string) => {
+      const isLogged = false;
+      console.log(name, email, password, isLogged)
+
+      return await service.post({ name, email, password, isLogged});
+    },
+
     validateUser: async (name: string) => {
         const user = await getUser(name);
         let response;
@@ -33,22 +40,23 @@ export const useApi = ()=> ({
         if (user && user.password === password) {
           const id = user.id;
           const name = user.name;
-          const mail = user.email;
+          const email = user.email;
           const password = user.password;
           const isLogged = true;
-          return await service.put({ id, name, mail, password, isLogged});
+          return await service.put({ id, name, email, password, isLogged});
         }
         return null
       },
+
     logout: async (email: string) => {
         let user = await getUser(email);
         if (user) {
           const id = user.id;
-          const mail = user.email;
+          const email = user.email;
           const name = user.name;
           const password = user.password;
           const isLogged = false;
-          await service.put({ id, name, mail, password, isLogged });
+          await service.put({ id, name, email, password, isLogged });
         }
         
       }
