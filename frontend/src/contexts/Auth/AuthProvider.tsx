@@ -36,11 +36,6 @@ export default function AuthProvider({ children }: { children: JSX.Element }) {
     return false;
   };
 
-  const register = async (name: string, password: string, email: string ) => {
-    await api.registerUser(name, password, email);
-    console.log ("Chamou a função register")
-  }
-
   //zera o usuário
   const signout = async () => {
     let email = user?.email ? user?.email : "";
@@ -55,7 +50,7 @@ export default function AuthProvider({ children }: { children: JSX.Element }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, signin, signout, register }}>
+    <AuthContext.Provider value={{ user, signin, signout }}>
       {children}
     </AuthContext.Provider>
   );

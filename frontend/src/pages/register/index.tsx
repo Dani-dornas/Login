@@ -1,11 +1,10 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/Auth/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import user from "../../service/userService";
 
 export default function Register() {
   const auth = useContext(AuthContext);
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -18,9 +17,8 @@ export default function Register() {
         isLogged: false,
         password: password,
       });
-      console.log("Apertou em Register");
     } else {
-      alert("Falha ao registrar");
+      alert("Preencha todos os campos");
     }
   };
 

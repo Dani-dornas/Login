@@ -1,12 +1,6 @@
-import axios from 'axios'
 import service from '../service/userService';
 import { User } from '../types/User';
 import { Search } from '../utils/SearchMethods';
-
-// usa a rota do backend
-const api = axios.create({
-    baseURL: process.env.PORT
-});
 
 export const useApi = ()=> ({
     // VALIDAÇÃO DE TOKEN DESATIVADA PORQUE USA-SE O MONGO
@@ -16,13 +10,6 @@ export const useApi = ()=> ({
         return response.data;
     },
     */
-
-    registerUser: async (name: string, email: string, password: string) => {
-      const isLogged = false;
-      console.log(name, email, password, isLogged)
-
-      return await service.post({ name, email, password, isLogged});
-    },
 
     validateUser: async (name: string) => {
         const user = await getUser(name);

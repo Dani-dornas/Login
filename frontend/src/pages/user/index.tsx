@@ -1,31 +1,9 @@
-import { useContext, useEffect, useState } from "react";
-import userService from "../../service/userService";
+import { useContext } from "react";
 import type { User } from "../../types/User";
-import { useParams } from "react-router-dom";
 import { AuthContext } from "../../contexts/Auth/AuthContext";
 
 export default function User() {
-    const [users, setUsers] = useState({} as User);
-    const { id } = useParams();
-
     const auth = useContext(AuthContext);
-
-    useEffect(() => {
-        if (id) {
-          userService
-            .listById(id)
-            .then((r) => {
-              setUsers(r);
-              // Se a lista de usuários estiver vazia, avisa
-              if (r.length === 0) {
-                alert("NÃO HÁ USUÁRIOS");
-              }
-            })
-            .catch((error) => {
-              console.error("Erro ao buscar informações de usuário:", error);
-            });
-        }
-      }, [id]);
 
     return (
         <div>
